@@ -7,7 +7,7 @@ toolchain=arm-linux-gnueabihf-g++
 source=cpp
 #source=c
 
-target_name=lab5.elf
+target_name=lab5
 main_proc_name=lab5
 
 
