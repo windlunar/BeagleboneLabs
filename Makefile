@@ -26,6 +26,10 @@ clean :
 	-rm $(obj_destination_path)/*.o
 	
 
+.PHONY : uploadex
+uploadex :
+	scp ./build/lab* ubuntu@192.168.6.2:/home/ubuntu
+
 
 
 
