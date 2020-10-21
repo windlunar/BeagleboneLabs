@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-using namespace std;
+//using namespace std;
 
 #define PWM_PATH "/sys/class/pwm/"
 #define P9_14 "pwm-3:0"
@@ -19,13 +19,13 @@ using namespace std;
 
 class PWM{
    private:
-      string name, path;
-      int32_t write(string path, string filename, string value);
+      std::string name, path;
+      int32_t write(string path, std::string filename, std::string value);
 
    public:
-	   PWM(string pinName);
-      void setPeriod(string period_ns);
-      void setDutyCycle(string duty_ns) ;
+	   PWM(std::string pinName);
+      void setPeriod(std::string period_ns);
+      void setDutyCycle(std::string duty_ns) ;
       void run();
       ~PWM();
 };

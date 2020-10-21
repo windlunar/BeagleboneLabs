@@ -19,11 +19,11 @@
 #define BUF_SIZE 4096 
 
 
-using namespace std ;
+//using namespace std ;
 
 class UART{
    private:
-      string devpath ;
+      std::string devpath ;
    public:
       int fd;
       UART(int uartdev) ;

@@ -18,7 +18,7 @@
 
 #define SPIDEV_PATH "/dev/spidev"
 
-using namespace std ;
+//using namespace std ;
 
 #define MODE0   0
 #define MODE1   1
