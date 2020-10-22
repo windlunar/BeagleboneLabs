@@ -14,21 +14,25 @@
 #include <fstream>
 
 #include "../peripheral/include/uart.h"
+#include "../device/include/us100_ultrasonic.h"
+
 
 using namespace std ;
 
 
 int main(int argc, char *argv[]){
-   UART uart(4) ;
+	if( argc != 2 ){
+		cout << "Error : Wrong argument number" << endl ;
+		cout << "Please type the command like './us100.elf 4'" << endl ;
+		return -1 ;
+	}
 
-   char writeBuf[1] = {0} ; 
-   writeBuf[0] = *argv[1] ;  
-   char readBuf[2] = {0} ;   
+
+   UART uart(stoi( argv[1] )) ;
+   US100 ultrasonic(&uart) ;
+
+   ultrasonic.print_dist_temp(1000) ;
    
-   uart.uartWrite(writeBuf, 1) ;
-   uart.uartRead(readBuf, 2) ;
-   printf("%x\n" ,readBuf[0]) ;
-   printf("%x\n" ,readBuf[1]) ;
    uart.uartClose() ;
 
    return 0;
