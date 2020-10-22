@@ -1,0 +1,37 @@
+#!/bin/bash
+echo "###You can config P9_28 as :"
+config-pin -l p9.28
+
+echo "###You can config P9_29 as :"
+config-pin -l p9.29
+
+echo "###You can config P9_30 as :"
+config-pin -l p9.30
+
+echo "###You can config P9_31 as :"
+config-pin -l p9.31
+#################################################
+echo "###Config P9_28 as spi_cs"
+config-pin -a p9.28 spi_cs
+
+echo "###Config P9_29 as spi"
+config-pin -a p9.29 spi
+ 
+echo "###Config P9_30 as spi"
+config-pin -a p9.30 spi
+
+echo "###Config P9_31 as spi_sclk"
+config-pin -a p9.31 spi_sclk
+#################################################
+echo "###Show P9_28 pin config :"
+config-pin -q p9.28
+
+echo "###Show P9_29 pin config :"
+config-pin -q p9.29
+
+echo "###Show P9_30 pin config :"
+config-pin -q p9.30
+
+echo "###Show P9_31 pin config :"
+config-pin -q p9.31
+

@@ -31,6 +31,16 @@ uploadex :
 	scp ./build/lab* ubuntu@192.168.6.2:/home/ubuntu
 
 
+.PHONY : upload
+upload :
+	scp ./build/*.elf ubuntu@192.168.6.2:/home/ubuntu
+
+
+.PHONY : uploadscpt
+uploadscpt :
+	scp ./script/* ubuntu@192.168.6.2:/home/ubuntu
+
+
 
 
 

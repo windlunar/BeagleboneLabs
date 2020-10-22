@@ -20,7 +20,7 @@
 class PWM{
    private:
       std::string name, path;
-      int32_t write(string path, std::string filename, std::string value);
+      int32_t write(std::string path, std::string filename, std::string value);
 
    public:
 	   PWM(std::string pinName);

@@ -39,7 +39,7 @@ class SPIDEV{
         //spidevX.Y ,X:bus number ,Y:device number
         uint32_t SPIbus ;
         uint32_t cs_num ;
-        string path ;
+        std::string path ;
 
         uint32_t SPIspeed ;
         uint8_t bitsPerFrame ;

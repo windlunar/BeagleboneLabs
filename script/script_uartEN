@@ -1,0 +1,31 @@
+#!/bin/bash
+echo "###You can config P9_11 as :"
+config-pin -l p9.11
+echo "###You can config P9_13 as :"
+config-pin -l p9.13
+
+echo "###You can config P9_24 as :"
+config-pin -l p9.24
+echo "###You can config P9_26 as :"
+config-pin -l p9.26
+#################################################
+echo "###Config P9_11 as uart"
+config-pin -a p9.11 uart
+echo "###Config P9_13 as uart"
+config-pin -a p9.13 uart
+
+echo "###Config P9_24 as uart"
+config-pin -a p9.24 uart
+echo "###Config P9_26 as uart"
+config-pin -a p9.26 uart
+#################################################
+echo "###Show P9_11 pin config :"
+config-pin -q p9.11 uart
+echo "###Show P9_13 pin config :"
+config-pin -q p9.13 uart
+
+echo "###Show P9_24 pin config :"
+config-pin -q p9.24 uart
+echo "###Show P9_26 pin config :"
+config-pin -q p9.26 uart
+
