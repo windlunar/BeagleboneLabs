@@ -7,7 +7,7 @@ toolchain=arm-linux-gnueabihf-g++
 source=cpp
 #source=c
 
-target_name=us100.elf
+target_name=main.elf
 main_proc_name=main
 
 
