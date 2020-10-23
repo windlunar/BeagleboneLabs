@@ -1,7 +1,3 @@
-/**
- * Lab5
- */ 
-
 #include <cstdio>
 #include <cstdlib>
 #include <fcntl.h>
@@ -23,17 +19,16 @@ using namespace std ;
 int main(int argc, char *argv[]){
 	if( argc != 2 ){
 		cout << "Error : Wrong argument number" << endl ;
-		cout << "Please type the command like './us100.elf 4'" << endl ;
+		cout << "Please type the uart bus number 0 to 4" << endl ;
 		return -1 ;
 	}
 
 
-   UART uart(stoi( argv[1] )) ;
-   US100 ultrasonic(&uart) ;
+   US100 ultrasonic( stoi(argv[1]) ) ;
 
-   ultrasonic.print_dist_temp(1000) ;
+   ultrasonic.print_dist(1000000) ;
    
-   uart.uartClose() ;
+   ultrasonic.uartClose() ;
 
    return 0;
 }
