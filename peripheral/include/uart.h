@@ -26,6 +26,7 @@ class UART{
       std::string devpath ;
    public:
       int fd;
+      UART(){} 
       UART(int uartdev) ;
       void uartClose();
       int uartOpen();

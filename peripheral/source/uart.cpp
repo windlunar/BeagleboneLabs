@@ -45,10 +45,15 @@ int UART::uartOpen(){
    struct termios options;
    tcgetattr(fd, &options);
    options.c_cflag = B9600 | CS8 | CREAD | CLOCAL;
+
+   //options.c_cflag |= ~PARENB;     //no parity
+   //options.c_cflag |= ~CSTOPB;     //not 2 stop bit
+
    options.c_iflag = IGNPAR /*| IGNCR*/ ;
    options.c_lflag &= ~(ICANON | ECHO | ECHOE | IEXTEN) ;
    options.c_oflag &= ~OPOST;
    options.c_cc[VMIN] = 1;
+   //options.c_cc[VMIN] = 0;
    options.c_cc[VTIME] = 0;   
    tcflush(fd, TCIFLUSH);
    tcsetattr(fd, TCSANOW, &options);
