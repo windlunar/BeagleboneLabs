@@ -11,18 +11,18 @@
 #include "../../peripheral/include/uart.h"
 
 
-class US100{
+class US100 : public UART{
     private:
-        UART *uart ;
-        
-    public:
-        uint32_t temperature ;
-        uint32_t range_mm ;
-        void us100_range() ;
-        void us100_getTemperature() ;
-        void print_dist_temp(int32_t count );
+        std::string devpath ;
 
-        US100(UART *uart) ;
+    public:
+        int32_t range_mm ;
+        int32_t us100_range() ;
+        void print_dist(int32_t count );
+
+        US100(int uartdev) ;
+        int uartOpen() ;
+        int uartRead(char *readBuf, int len);
         ~US100(){} ;
 };
 
