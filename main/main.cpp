@@ -33,7 +33,8 @@ int main(int argc, char *argv[]){
 	printf("MPU6050 GYRO_CONFIG : 0x%x\n" ,mpu6050.readReg(mpu6050.reg.GYRO_CONFIG)) ;
 	printf("MPU6050 ACCEL_CONFIG : 0x%x\n" ,mpu6050.readReg(mpu6050.reg.ACCEL_CONFIG)) ;
 
-
+	mpu6050.print_Accel(100) ;
+	mpu6050.print_Gyro(100) ;
 
 
    	return 0;

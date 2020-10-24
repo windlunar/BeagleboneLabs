@@ -1,4 +1,8 @@
 
+/**
+ * Author : NCHU EE 720a
+ */ 
+
 #include "../include/mpu6050_i2c.h"
 
 
@@ -17,7 +21,7 @@ MPU6050_I2C::MPU6050_I2C(I2CDEV *i2c_ptr){
 	this->rawGyroZ = 0 ;
 
 	this->accel_range = ACCEL_RANGE_4_G;
-	this->gyro_range = GYRO_RANGE_1000_DEGREE;
+	this->gyro_range = GYRO_RANGE_500_DEGREE;
 
 	mpuInit();
 }
@@ -44,7 +48,12 @@ void MPU6050_I2C::mpuInit(){
 
 	/** Set Gyro range*/
 	uint8_t gyro_config_val = readReg(reg.GYRO_CONFIG) ;
-	gyro_config_val |= (uint8_t)(gyro_range << 3) ;
+
+	//clear bit3 bit4
+	gyro_config_val &= ~( (uint8_t)(0x03 << 3) ) ;	
+
+	//set bit3 bit4
+	gyro_config_val |= (uint8_t)(gyro_range << 3) ;	
 
 	printf("Write 0x%x to GYRO_CONFIG, set gyro full scale range.\n" ,gyro_config_val) ;
 	writeReg(reg.GYRO_CONFIG ,gyro_config_val) ;
@@ -52,13 +61,18 @@ void MPU6050_I2C::mpuInit(){
 
 	/** Set Accel range*/
 	uint8_t accel_config_val = readReg(reg.ACCEL_CONFIG) ;
-	accel_config_val |= (uint8_t)(accel_range << 3) ;
+
+	//clear bit3 bit4
+	accel_config_val &= ~( (uint8_t)(0x03 << 3) ) ;	
+
+	//set bit3 bit4
+	accel_config_val |= (uint8_t)(accel_range << 3) ; 
 
 	printf("Write 0x%x to ACCEL_CONFIG, set Accel full scale range.\n" ,accel_config_val) ;
 	writeReg(reg.ACCEL_CONFIG ,accel_config_val) ;
 
 	/** Check if MPU6050 id = 0x68*/
-	uint8_t mpuID = getMPU6050_ID();
+	uint8_t mpuID = getID();
 	if( mpuID != 0x68 ){
 		cout << "Wrong mpu6050 ID number!" << endl  ;
 		exit(1) ;
@@ -69,7 +83,7 @@ void MPU6050_I2C::mpuInit(){
 
 
 //Default ID should be 0x68
-uint8_t MPU6050_I2C::getMPU6050_ID(){
+uint8_t MPU6050_I2C::getID(){
 	return readReg(reg.WHO_AM_I) ;
 }
 
@@ -94,62 +108,126 @@ uint8_t MPU6050_I2C::readReg(uint8_t regAddr){
 
 
 
-short MPU6050_I2C::combine_MSB_LSB(uint8_t msByte, uint8_t lsByte){
-	//
+short MPU6050_I2C::combine_MSB_LSB(uint8_t msByte, uint8_t lsByte)
+{
    return ((short)msByte << 8) | (short)lsByte ;
 }
 
 
-int32_t MPU6050_I2C::getRawGyro(){
+int32_t MPU6050_I2C::getGyro(){
+	uint8_t *gyro_raw = new uint8_t[6] ;
 
-	calculate_GyroXYZ() ;
+	for(int i =0 ; i < 5 ; i++){
+		gyro_raw[i] = readReg( (reg.GYRO_XOUT_H) + i ) ;
+	}
+
+	rawGyroX = combine_MSB_LSB(gyro_raw[0],gyro_raw[1]) ;
+	rawGyroY = combine_MSB_LSB(gyro_raw[2],gyro_raw[3]) ;
+	rawGyroZ = combine_MSB_LSB(gyro_raw[4],gyro_raw[5]) ;
+
+	calRawGyro() ;
+	delete gyro_raw ;
+
 	return 0;
 }
 
 
-void MPU6050_I2C::calculate_GyroXYZ(){
+void MPU6050_I2C::calRawGyro(){
+	float fullScaleRange ;
+	switch(gyro_range){
+		case 1 :
+			fullScaleRange = 500.0f ;
+			break ;
+		case 2 :
+			fullScaleRange = 1000.0f ;
+			break ;
+		case 3 :
+			fullScaleRange = 2000.0f ;
+			break ;
+		default:
+			fullScaleRange = 250.0f ;
+			break ;
+	}
 
+    int resol = 32768;	//16-bit
+
+	Gyro_X = ( (float)rawGyroX * (float)fullScaleRange )/(float)resol ;
+    Gyro_Y = ( (float)rawGyroY * (float)fullScaleRange )/(float)resol ;
+    Gyro_Z = ( (float)rawGyroZ * (float)fullScaleRange )/(float)resol ;
 
 }
 
 
 
-void MPU6050_I2C::print_GyroXYZ(int32_t count){
+void MPU6050_I2C::print_Gyro(int32_t count){
 	for(int i = 0 ; i < count ; i++){
-	      cout 	<< "accel_X(g): " << fixed << setprecision(4) << Gyro_X 
-		  		<< " ;  accel_Y(g): " << fixed << setprecision(4) << Gyro_Y 
-				<< " ;  accel_Z(g): " << fixed << setprecision(4) << Gyro_Z 
-				<< "     \r" << flush;
+	      cout 	<< "[ gyro_x ,gyro_y ,gyro_z ] : [" << fixed << setprecision(4) << Gyro_X 
+		  		<< " ," << fixed << setprecision(4) << Gyro_Y 
+				<< " ," << fixed << setprecision(4) << Gyro_Z 
+				<< " ]     \r" << endl ;//flush;
 	      usleep(100000);
-		  getRawGyro() ;
+		  getGyro() ;
 	}
 }
 
-int32_t MPU6050_I2C::getRawAccel(){
+int32_t MPU6050_I2C::getAccel(){
+	uint8_t *accel_raw = new uint8_t[6] ;
+
+	for(int i =0 ; i < 5 ; i++){
+		accel_raw[i] = readReg( (reg.ACCEL_XOUT_H) + i ) ;
+	}
+
+	rawAccelX = combine_MSB_LSB(accel_raw[0],accel_raw[1]) ;
+	rawAccelY = combine_MSB_LSB(accel_raw[2],accel_raw[3]) ;
+	rawAccelZ = combine_MSB_LSB(accel_raw[4],accel_raw[5]) ;
+	
+	//printf("ax_raw : %d ,ay_raw : %d ,az_raw : %d \n"
+	//		,(int)rawAccelX ,(int)rawAccelY ,(int)rawAccelZ) ;
+
+	calRawAccel() ;
+	delete accel_raw ;
 
 	return 0;
 }
 
 
-void MPU6050_I2C::calculate_AccelXYZ_g(){
-	float gravity_range = 4.0f; 
-    float resol = 1024.0f;	//10-bit
-    float factor = gravity_range / resol;
+void MPU6050_I2C::calRawAccel()
+{
+	float fullScaleRange ;
+	switch(accel_range){
+		case 1 :
+			fullScaleRange = 4.0f ;
+			break ;
+		case 2 :
+			fullScaleRange = 8.0f ;
+			break ;
+		case 3 :
+			fullScaleRange = 16.0f ;
+			break ;
+		default:
+			fullScaleRange = 2.0f ;
+			break ;
+	}
 
-    accelXg = rawAccelX * factor;
-    accelYg = rawAccelY * factor;
-    accelZg = rawAccelZ * factor;
+    int resol = 32768;	//16-bit
+
+	accelXg = ( (float)rawAccelX * (float)fullScaleRange )/(float)resol ;
+    accelYg = ( (float)rawAccelY * (float)fullScaleRange )/(float)resol ;
+    accelZg = ( (float)rawAccelZ * (float)fullScaleRange )/(float)resol ;
+
+	//printf("ax_g : %f ,ay_g : %f ,az_g : %f \n",accelXg ,accelYg ,accelZg) ;
+
 }
 
 
 
-void MPU6050_I2C::print_AccelXYZ(int32_t count){
+void MPU6050_I2C::print_Accel(int32_t count){
 	for(int i = 0 ; i < count ; i++){
-	      cout 	<< "accel_X(g): " << fixed << setprecision(4) << accelXg 
-		  		<< " ;  accel_Y(g): " << fixed << setprecision(4) << accelYg 
-				<< " ;  accel_Z(g): " << fixed << setprecision(4) << accelZg 
-				<< "     \r" << flush;
+	      cout 	<< "[ a_x ,a_y ,a_z ] : [" << fixed << setprecision(4) << accelXg 
+		  		<< " ," << fixed << setprecision(4) << accelYg 
+				<< " ," << fixed << setprecision(4) << accelZg 
+				<< " ]     \r" << endl ;//flush;
 	      usleep(100000);
-	      getRawAccel();
+	      getAccel();
 	}
 }

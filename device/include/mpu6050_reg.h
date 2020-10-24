@@ -114,10 +114,10 @@ typedef struct{
 #define GYRO_RANGE_1000_DEGREE  2   // +/-  1000 degree/sec
 #define GYRO_RANGE_2000_DEGREE  3   // +/-  2000 degree/sec
 
-#define ACCEL_RANGE_2_G   0   // +/-  250 degree/sec
-#define ACCEL_RANGE_4_G   1   // +/-  500 degree/sec
-#define ACCEL_RANGE_8_G   2    // +/-  1000 degree/sec
-#define ACCEL_RANGE_16_G  3   // +/-  2000 degree/sec
+#define ACCEL_RANGE_2_G   0   // +/-  2G
+#define ACCEL_RANGE_4_G   1   // +/-  4G
+#define ACCEL_RANGE_8_G   2    // +/- 8G
+#define ACCEL_RANGE_16_G  3   // +/-  16G
 
 
 

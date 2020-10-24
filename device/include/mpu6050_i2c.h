@@ -12,6 +12,10 @@
 #include "../../peripheral/include/i2c.h"
 
 
+/** 
+ * For Beaglebone black with Ubuntu 18.04.4 LTS,Image 2020-03-12
+ * P9_19 and P9_20 is configure as i2c2 -----> /dev/i2c-2
+*/
 class MPU6050_I2C{
     private:
         I2CDEV *i2c ;
@@ -26,25 +30,23 @@ class MPU6050_I2C{
         MPU6050_REG_t reg ;
 
         int32_t accel_range ;
-        int32_t accel_resolution ;
         int32_t gyro_range ;
-        int32_t gyro_resolution ;
 
         void mpuInit();
         int32_t writeReg(uint8_t regAddr, uint8_t value);
         uint8_t readReg(uint8_t regAddr);
         short combine_MSB_LSB(uint8_t msByte, uint8_t lsByte);
 
-        int32_t getRawAccel();
-        int32_t getRawGyro();
+        int32_t getAccel();
+        int32_t getGyro();
 
-        void calculate_AccelXYZ_g() ;
-        void calculate_GyroXYZ() ;
+        void calRawAccel() ;
+        void calRawGyro() ;
 
-        void print_AccelXYZ(int32_t count);
-        void print_GyroXYZ(int32_t count);
+        void print_Accel(int32_t count);
+        void print_Gyro(int32_t count);
 
-        uint8_t getMPU6050_ID() ;
+        uint8_t getID() ;
 
         MPU6050_I2C(I2CDEV *i2c_ptr) ;
         ~MPU6050_I2C(){}
