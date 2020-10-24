@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "###You can config P9_19 as :"
+config-pin -l p9.19
+
+echo "###You can config P9_20 as :"
+config-pin -l p9.20
+#################################################
+echo "###Config P9_19 as i2c"
+config-pin -a p9.19 i2c
+
+echo "###Config P9_20 as i2c"
+config-pin -a p9.20 i2c
+#################################################
+echo "###Show P9_19 pin config :"
+config-pin -q p9.19
+
+echo "###Show P9_20 pin config :"
+config-pin -q p9.20
+

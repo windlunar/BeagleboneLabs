@@ -4,7 +4,7 @@
 include ../../common.make
 
 obj_destination_path = ../../build/object
-obj=adxl345_I2C.o adxl345_SPI.o us100_ultrasonic.o
+obj=adxl345_I2C.o adxl345_SPI.o us100_ultrasonic.o mpu6050_i2c.o
 
 .PHONY : all
 all: $(obj) copy

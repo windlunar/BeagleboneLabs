@@ -76,5 +76,7 @@ void I2CDEV::i2c_Close(){
 }
 
 
-I2CDEV::~I2CDEV() {}
+I2CDEV::~I2CDEV(){
+   i2c_Close() ;
+}
 

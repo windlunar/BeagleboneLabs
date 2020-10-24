@@ -9,8 +9,8 @@
 #include <sstream>
 #include <fstream>
 
-#include "../peripheral/include/uart.h"
-#include "../device/include/us100_ultrasonic.h"
+#include "../peripheral/include/i2c.h"
+#include "../device/include/mpu6050_i2c.h"
 
 
 using namespace std ;
@@ -23,11 +23,17 @@ int main(int argc, char *argv[]){
 		return -1 ;
 	}
 
-	UART uart(stoi(argv[1])) ;
-	
-	US100 ultrasonic( &uart ) ;
+	I2CDEV i2c(stoi(argv[1]) ,0x68) ;
+	MPU6050_I2C mpu6050(&i2c) ;
 
-	ultrasonic.print_dist(1000000) ;
+	//printf("MPU6050 ID : 0x%x\n" ,mpu6050.getMPU6050_ID()) ;
+	printf("MPU6050 ID : 0x%x\n" ,mpu6050.readReg(mpu6050.reg.WHO_AM_I)) ;
+	printf("MPU6050 USER_CTRL : 0x%x\n" ,mpu6050.readReg(mpu6050.reg.USER_CTRL)) ;
+	printf("MPU6050 PWR_MGMT_1 : 0x%x\n" ,mpu6050.readReg(mpu6050.reg.PWR_MGMT_1)) ;
+	printf("MPU6050 GYRO_CONFIG : 0x%x\n" ,mpu6050.readReg(mpu6050.reg.GYRO_CONFIG)) ;
+	printf("MPU6050 ACCEL_CONFIG : 0x%x\n" ,mpu6050.readReg(mpu6050.reg.ACCEL_CONFIG)) ;
+
+
 
 
    	return 0;
