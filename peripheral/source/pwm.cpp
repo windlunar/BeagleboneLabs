@@ -5,22 +5,51 @@
 using namespace std;
 
 
-PWM::PWM(string pinName) {
-	this->name = pinName;
-	this->path = PWM_PATH + this->name + "/" ;
+PWM::PWM(string pin) {
+	this->pin = pin;
+   stringstream ss ;
+   ss << PWM_PATH << this->pin << "/" ;
+   path = ss.str() ;
 }
 
-void PWM::setPeriod(string period_ns){
-	write(this->path, PWM_PERIOD, period_ns);
+
+PWM::PWM(int chip ,int channel) {
+   stringstream ss ;
+   ss <<  PWM_PATH << "pwm-" << chip << ":" << channel << "/" ;
+	
+	path = ss.str() ;
 }
 
-void PWM::setDutyCycle(string duty_ns){
-	write(this->path, PWM_DUTY, duty_ns);
+
+void PWM::configPeriod(string periodNS){
+	write(path, PWM_PERIOD, periodNS);
 }
 
-void PWM::run(){
-	write(this->path, PWM_RUN, "1");
+
+void PWM::configDutyCycle(string dutyNS){
+	write(path, PWM_DUTY, dutyNS);
 }
+
+
+void PWM::setFreq_and_DutyCycle(int Hz ,float dutyCycle){
+   float T = (float)1 / float(Hz) ;
+   int T_ns = (int)(T * (int)1000000000) ;
+
+   stringstream ss_T ;
+   ss_T << T_ns ;
+   configPeriod(ss_T.str()) ;
+
+   int DT_ns = T_ns * ( dutyCycle /(float)100 ) ;
+   stringstream ss_DT ;
+   ss_DT << DT_ns ;
+   configDutyCycle(ss_DT.str()) ;
+}
+
+
+void PWM::enable(){
+	write(path, PWM_ENABLE, "1");
+}
+
 
 int32_t PWM::write(string path, string filename, string value){
    ofstream fs;
