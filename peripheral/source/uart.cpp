@@ -14,6 +14,7 @@ UART::UART(int uartdev){
 
 void UART::uartClose(){
    close(fd);
+   fd = -1 ;
 }
 
 int UART::uartOpen(){
@@ -102,7 +103,7 @@ int UART::getChar(char *readBuf){
 
 UART::~UART(){
    uartClose() ;
-   fd = -1 ;
+   
 }
 
 

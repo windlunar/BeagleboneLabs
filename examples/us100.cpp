@@ -28,11 +28,11 @@ int main(int argc, char *argv[]){
 	}
 
 
-   US100 ultrasonic( stoi(argv[1]) ) ;
+	UART uart(stoi(argv[1])) ;
+	
+	US100 ultrasonic( &uart ) ;
 
-   ultrasonic.print_dist(1000000) ;
-   
-   ultrasonic.uartClose() ;
+	ultrasonic.print_dist(1000000) ;
 
    return 0;
 }

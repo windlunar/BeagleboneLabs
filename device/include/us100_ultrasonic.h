@@ -13,17 +13,15 @@
 
 class US100 : public UART{
     private:
-        std::string devpath ;
+        UART *uart ;
 
     public:
         int32_t range_mm ;
         int32_t us100_range() ;
         void print_dist(int32_t count );
 
-        US100(int uartdev) ;
-        int uartOpen() ;
-        int uartRead(char *readBuf, int len);
-        ~US100(){} ;
+        US100(UART *uartobj) ;
+        ~US100() ;
 };
 
 

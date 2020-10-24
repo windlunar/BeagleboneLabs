@@ -23,12 +23,12 @@ int main(int argc, char *argv[]){
 		return -1 ;
 	}
 
+	UART uart(stoi(argv[1])) ;
+	
+	US100 ultrasonic( &uart ) ;
 
-   US100 ultrasonic( stoi(argv[1]) ) ;
+	ultrasonic.print_dist(1000000) ;
 
-   ultrasonic.print_dist(1000000) ;
-   
-   ultrasonic.uartClose() ;
 
-   return 0;
+   	return 0;
 }

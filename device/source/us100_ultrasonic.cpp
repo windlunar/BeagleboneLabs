@@ -6,52 +6,30 @@
 using namespace std;
 
 
-US100::US100(int uartdev){
+US100::US100(UART *uartobj){
+    this->uart = uartobj ;
 
-    stringstream ss ;
-    ss << UART_PATH << uartdev ;
-    devpath = ss.str() ;
-    fd = uartOpen() ;
+    int flags;
+    flags = fcntl(uart->fd, F_GETFL);
+    flags |= O_NONBLOCK;
+    if (fcntl(uart->fd, F_SETFL, flags) == -1){
+        perror("Error : Can't change flags!");
+        exit(-1);
+    }
 }
 
-
-int US100::uartOpen(){
-   if ((fd = open(devpath.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK ))<0){
-      perror("Failed to open the UART device.\n");
-      return -1;
-   }
-   /** 
-    * struct termios 設定, 參考 uart.cpp 中 int UART::uartOpen()的註解
-    */
-
-    struct termios options;
-    tcgetattr(fd, &options);
-
-    options.c_cflag = B9600 | CS8 | CREAD | CLOCAL;
-    //options.c_cflag |= ~PARENB;     //no parity
-    //options.c_cflag |= ~CSTOPB;     //not 2 stop bit
-    options.c_iflag = IGNPAR | ICRNL;
-
-    tcflush(fd, TCIFLUSH);
-    tcsetattr(fd, TCSANOW, &options);
-
-    return fd ;
+US100::~US100(){
+    uart->uartClose() ;
 }
 
-
-int US100::uartRead(char *readBuf, int len){
-    int cnt = -1;
-    cnt = read(fd, readBuf, len) ;   
-    return cnt ;
-}
 
 
 int32_t US100::us100_range(){
-    char writeVal = 0x55 ; 
+    string writeVal = "U\n" ; 
     char readBuf_mm[2] = {0} ;
     
-    uartWrite(&writeVal,1) ;
-    uartRead(readBuf_mm ,2) ;
+    uart->uartWrite(writeVal.c_str(),2) ;
+    uart->uartRead(readBuf_mm ,2) ;
 
     range_mm = (int32_t)( (readBuf_mm[0] <<8 ) | readBuf_mm[1] ) ;
 
