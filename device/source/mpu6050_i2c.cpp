@@ -1,6 +1,6 @@
 
 /**
- * Author : NCHU EE 720a
+ * Maintainer : Allen Lin
  */ 
 
 #include "../include/mpu6050_i2c.h"

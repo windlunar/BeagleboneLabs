@@ -1,4 +1,8 @@
 
+/**
+ * Maintainer : Allen Lin
+ */ 
+
 #include "../include/us100_ultrasonic.h"
 
 
