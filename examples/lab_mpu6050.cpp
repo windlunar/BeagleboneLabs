@@ -23,7 +23,7 @@ using namespace std ;
 int main(int argc, char *argv[]){
 	if( argc != 2 ){
 		cout << "Error : Wrong argument number" << endl ;
-		cout << "Please type the uart bus number 0 to 4" << endl ;
+		cout << "Please type the i2c bus number." << endl ;
 		return -1 ;
 	}
 
