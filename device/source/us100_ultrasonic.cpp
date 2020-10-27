@@ -53,7 +53,7 @@ void US100::print_dist(int32_t count){
             cout 	<< "Distance (mm): " << range_mm
 				<< "     \r" << endl;
         }
-	    usleep(10000);
+	    usleep(200000);
         us100_range() ;
 	}
 }
