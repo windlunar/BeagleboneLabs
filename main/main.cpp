@@ -1,60 +1,38 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstdint>
+/**
+ * Lab5
+ */ 
+
+#include <cstdio>
 #include <cstdlib>
-#include "../peripheral/include/pwm.h"
-#include "../device/include/L9110S.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <termios.h>
+#include <cstring>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+#include "../peripheral/include/uart.h"
+#include "../device/include/us100_ultrasonic.h"
 
 
-using namespace std;
+using namespace std ;
 
 
-int main(int argc, char* argv[]){
-   cout << "Starting the program" << endl;
-
-   PWM *pwm1 = new PWM(P9_14) ;
-   PWM *pwm2 = new PWM(P9_16) ;
-
-   L9110S motor(pwm1 ,pwm2) ;
-
-   motor.start() ;
-
-   for(int i = 0 ; i<4 ; i++){
-      cout << "Speed UP : " << i << endl ;
-      motor.speedUp();
-      usleep(1000000) ;
-   }
-
-   for(int i = 0 ; i<4 ; i++){
-      cout << "Speed Down : " << i << endl ;
-      motor.speedDown() ;
-      usleep(1000000) ;
-   }
+int main(int argc, char *argv[]){
+	if( argc != 2 ){
+		cout << "Error : Wrong argument number" << endl ;
+		cout << "Please type the uart bus number 0 to 4" << endl ;
+		return -1 ;
+	}
 
 
+	UART uart(stoi(argv[1])) ;
+	
+	US100 ultrasonic( &uart ) ;
 
-   cout << "Change rotate direction." << endl ;
-   motor.changeRotateDirection(REVERSE_ROTATION) ;
-
-
-
-   for(int i = 0 ; i<4 ; i++){
-      cout << "Speed UP : " << i << endl ;
-      motor.speedUp();
-      usleep(1000000) ;
-   }
-
-   for(int i = 0 ; i<4 ; i++){
-      cout << "Speed Down : " << i << endl ;
-      motor.speedDown() ;
-      usleep(1000000) ;
-   }
-   
-
-   motor.stop() ;
-
-   delete pwm1 ,pwm2 ;
+	ultrasonic.print_dist(1000000) ;
 
    return 0;
 }
