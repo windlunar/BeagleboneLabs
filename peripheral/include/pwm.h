@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdint>
 #include <cstdlib>
+#include <unistd.h>
 
 //using namespace std;
 
@@ -35,16 +36,20 @@ class PWM{
    private:
       std::string pin, path;
       int32_t write(std::string path, std::string filename, std::string value);
+      int T_ns ;
 
    public:
 	   PWM(std::string pin);
       PWM(int chip ,int channel) ;
 
+
       void configPeriod(std::string periodNS);
       void configDutyCycle(std::string dutyNS) ;
       void enable();
+      void disable() ;
 
-      void setFreq_and_DutyCycle(int Hz ,float dutyCycle);
+      void setDutyCycle(float dutyCycle);
+      void setFreq(int Hz) ;
 
       ~PWM();
 };

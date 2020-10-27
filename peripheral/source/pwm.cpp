@@ -31,15 +31,18 @@ void PWM::configDutyCycle(string dutyNS){
 }
 
 
-void PWM::setFreq_and_DutyCycle(int Hz ,float dutyCycle){
+void PWM::setFreq(int Hz){
    float T = (float)1 / float(Hz) ;
-   int T_ns = (int)(T * (int)1000000000) ;
+   this->T_ns = (int)(T * (int)1000000000) ;
 
    stringstream ss_T ;
    ss_T << T_ns ;
    configPeriod(ss_T.str()) ;
+}
 
-   int DT_ns = T_ns * ( dutyCycle /(float)100 ) ;
+
+void PWM::setDutyCycle(float dutyCycle){
+   int DT_ns = (this->T_ns) * ( dutyCycle /(float)100 ) ;
    stringstream ss_DT ;
    ss_DT << DT_ns ;
    configDutyCycle(ss_DT.str()) ;
@@ -48,6 +51,11 @@ void PWM::setFreq_and_DutyCycle(int Hz ,float dutyCycle){
 
 void PWM::enable(){
 	write(path, PWM_ENABLE, "1");
+}
+
+
+void PWM::disable(){
+	write(path, PWM_ENABLE, "0");
 }
 
 
@@ -62,6 +70,7 @@ int32_t PWM::write(string path, string filename, string value){
    fs.close();
    return 0;
 }
+
 
 
 PWM::~PWM(){}
