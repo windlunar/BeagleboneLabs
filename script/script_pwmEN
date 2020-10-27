@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "###You can config P9_14 as :"
+config-pin -l p9.14
+
+echo "###You can config P9_16 as :"
+config-pin -l p9.16
+#################################################
+echo "###Config P9_14 as pwm"
+config-pin -a p9.14 pwm
+
+echo "###Config P9_16 as pwm"
+config-pin -a p9.16 pwm
+#################################################
+echo "###Show P9_14 pin config :"
+config-pin -q p9.14
+
+echo "###Show P9_16 pin config :"
+config-pin -q p9.16
+
